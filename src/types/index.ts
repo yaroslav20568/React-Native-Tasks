@@ -1,7 +1,7 @@
 import { TodoStatus } from '../constants';
 
 type TTodoStatus =
-  | null
+  | ''
   | TodoStatus.InProgres
   | TodoStatus.Completed
   | TodoStatus.Cancelled;

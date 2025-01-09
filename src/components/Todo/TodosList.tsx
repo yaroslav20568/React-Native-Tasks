@@ -1,19 +1,21 @@
 import React from 'react';
 import { View, FlatList, Text, ActivityIndicator } from 'react-native';
 import { s } from 'react-native-wind';
-import { ITodo } from '../../types';
+import { ITodo, TTodoStatus } from '../../types';
 import { Todo } from '../../components';
 
 interface IProps {
   todos: Array<ITodo>;
   isLoaded: boolean;
   deleteTodo: (id: string) => void;
+  changeStatusTodo: (id: string, status: TTodoStatus) => void;
 }
 
 const TodosList = ({
   todos,
   isLoaded,
-  deleteTodo
+  deleteTodo,
+  changeStatusTodo
 }: IProps): React.JSX.Element => {
   const itemSeparatorComponent = (): React.JSX.Element => (
     <View style={s`h-4`}></View>
@@ -31,7 +33,12 @@ const TodosList = ({
     <FlatList
       data={todos}
       renderItem={({ item, index }) => (
-        <Todo {...item} index={index} deleteTodo={deleteTodo} />
+        <Todo
+          {...item}
+          index={index}
+          deleteTodo={deleteTodo}
+          changeStatusTodo={changeStatusTodo}
+        />
       )}
       ItemSeparatorComponent={itemSeparatorComponent}
       ListEmptyComponent={listEmptyComponent}

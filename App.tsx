@@ -2,14 +2,15 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native';
 import { s } from 'react-native-wind';
 import uuid from 'react-native-uuid';
-import { Notifier, Easing } from 'react-native-notifier';
+import { useToast } from 'react-native-toast-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Header, TodoAddForm, TodosList } from './src/components';
-import { ITodo, IAddFormData } from './src/types';
+import { ITodo, IAddFormData, TTodoStatus } from './src/types';
 
 const App = (): React.JSX.Element => {
   const [todos, setTodos] = useState<Array<ITodo>>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const toast = useToast();
 
   useEffect(() => {
     getTodosFromStorage();
@@ -30,7 +31,7 @@ const App = (): React.JSX.Element => {
       const createdTodo: ITodo = {
         id: uuid.v4(),
         ...todoFormValues,
-        status: null,
+        status: '',
         createdAt: new Date()
       };
       const newTodos = [...todos, createdTodo];
@@ -38,14 +39,7 @@ const App = (): React.JSX.Element => {
       setTodos(newTodos);
       await AsyncStorage.setItem('todos', JSON.stringify(newTodos));
 
-      Notifier.showNotification({
-        title: `Todo added`,
-        description: 'Check it out in the todos, manage todo list',
-        duration: 3000,
-        showAnimationDuration: 800,
-        showEasing: Easing.ease,
-        hideOnPress: true
-      });
+      toast.show('Todo added. Check it out in the todos, manage todo list');
     },
     [todos]
   );
@@ -56,6 +50,31 @@ const App = (): React.JSX.Element => {
 
       setTodos(newTodos);
       await AsyncStorage.setItem('todos', JSON.stringify(newTodos));
+
+      toast.show('Todo deleted. Check it out in the todos, manage todo list');
+    },
+    [todos]
+  );
+
+  const changeStatusTodo = useCallback(
+    async (id: string, status: TTodoStatus): Promise<void> => {
+      let newTodos: Array<ITodo> = [];
+
+      setTodos(prevTodos => {
+        const actualTodos = prevTodos.map(todo => {
+          if (todo.id === id) todo.status = status;
+          return todo;
+        });
+
+        newTodos = [...actualTodos];
+
+        return actualTodos;
+      });
+      await AsyncStorage.setItem('todos', JSON.stringify(newTodos));
+
+      toast.show(
+        'Todo changed status. Check it out in the todos, manage todo list'
+      );
     },
     [todos]
   );
@@ -63,7 +82,12 @@ const App = (): React.JSX.Element => {
   return (
     <SafeAreaView style={s`flex-1 bg-violet-100`}>
       <Header />
-      <TodosList todos={todos} isLoaded={isLoaded} deleteTodo={deleteTodo} />
+      <TodosList
+        todos={todos}
+        isLoaded={isLoaded}
+        deleteTodo={deleteTodo}
+        changeStatusTodo={changeStatusTodo}
+      />
       <TodoAddForm addTodo={addTodo} />
     </SafeAreaView>
   );

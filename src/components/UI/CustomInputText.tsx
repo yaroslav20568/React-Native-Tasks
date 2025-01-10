@@ -15,6 +15,7 @@ interface IProps<T extends FieldValues> {
   inputStyle?: StyleProp<TextStyle>;
   errorTextStyle?: StyleProp<TextStyle>;
   placeholderTextColor?: ColorValue | undefined;
+  selectionColor?: ColorValue | undefined;
 }
 
 const CustomInputText = <T extends FieldValues>({
@@ -23,7 +24,8 @@ const CustomInputText = <T extends FieldValues>({
   placeholder,
   inputStyle,
   errorTextStyle,
-  placeholderTextColor
+  placeholderTextColor,
+  selectionColor
 }: IProps<T>): React.JSX.Element => {
   return (
     <>
@@ -43,6 +45,7 @@ const CustomInputText = <T extends FieldValues>({
               disableFullscreenUI={true}
               style={inputStyle}
               placeholderTextColor={placeholderTextColor}
+              selectionColor={selectionColor}
             />
             {error && <Text style={errorTextStyle}>{error.message}</Text>}
           </>

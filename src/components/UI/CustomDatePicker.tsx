@@ -8,7 +8,6 @@ import {
   ViewStyle
 } from 'react-native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { s } from 'react-native-wind';
 import moment from 'moment';
 import DatePicker from 'react-native-date-picker';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
@@ -19,6 +18,9 @@ interface IProps<T extends FieldValues> {
   buttonStyle?: StyleProp<ViewStyle>;
   errorTextStyle?: StyleProp<TextStyle>;
   iconColor?: ColorValue | undefined;
+  textStyle?: StyleProp<TextStyle>;
+  currentDate: Date;
+  setCurrentDate: (date: Date) => void;
 }
 
 const CustomDatePicker = <T extends FieldValues>({
@@ -26,10 +28,12 @@ const CustomDatePicker = <T extends FieldValues>({
   name,
   buttonStyle,
   errorTextStyle,
-  iconColor
+  iconColor,
+  textStyle,
+  currentDate,
+  setCurrentDate
 }: IProps<T>): React.JSX.Element => {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [openDatePicker, setOpenDatePicker] = useState(false);
+  const [openDatePicker, setOpenDatePicker] = useState<boolean>(false);
 
   const onCancel = (): void => {
     setOpenDatePicker(false);
@@ -43,14 +47,14 @@ const CustomDatePicker = <T extends FieldValues>({
     <>
       <TouchableOpacity onPress={onOpen} style={buttonStyle}>
         <SimpleLineIcons name='calendar' size={18} color={iconColor} />
-        <Text style={s`ml-3`}>
+        <Text style={textStyle}>
           {moment(currentDate).format('MMMM Do YYYY, HH:mm')}
         </Text>
       </TouchableOpacity>
       <Controller
         control={control}
         name={name}
-        render={({ field: { onChange }, fieldState: { error } }) => (
+        render={({ field: { onChange, value }, fieldState: { error } }) => (
           <>
             <DatePicker
               modal

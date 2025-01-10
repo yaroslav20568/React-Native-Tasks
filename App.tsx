@@ -5,27 +5,37 @@ import uuid from 'react-native-uuid';
 import { useToast } from 'react-native-toast-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Header, SortBarTodos, TodoAddForm, TodosList } from './src/components';
-import { ITodo, IAddFormData, TTodoStatus } from './src/types';
+import { ITodo, IAddFormData, TTodoStatus, IsortedParams } from './src/types';
 import { sortDateTodos, sortStatusTodos } from './src/helpers';
 
 const App = (): React.JSX.Element => {
   const [todos, setTodos] = useState<Array<ITodo>>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [ascSortPubDate, setAscSortPubDate] = useState<boolean>(true);
-  const [ascSortStatus, setAscSortStatus] = useState<boolean>(true);
+  const [sortedParams, setSortedParams] = useState<IsortedParams>({
+    ascSortPubDate: true,
+    ascSortStatus: true
+  });
   const toast = useToast();
 
   useEffect(() => {
-    getTodosFromStorage();
+    getDataFromStorage();
   }, []);
 
-  const getTodosFromStorage = async (): Promise<void> => {
+  const getDataFromStorage = async (): Promise<void> => {
     setIsLoaded(false);
 
     const stringTodos = (await AsyncStorage.getItem('todos')) || '[]';
-    const parseTodos: Array<ITodo> = JSON.parse(stringTodos);
+    const stringSortedParams =
+      (await AsyncStorage.getItem('sortedParams')) ||
+      '{"ascSortPubDate": true, "ascSortStatus": true}';
 
-    setTodos(parseTodos);
+    const parseTodos: Array<ITodo> = JSON.parse(stringTodos);
+    const parseSortedParams: IsortedParams = JSON.parse(stringSortedParams);
+
+    const sortedTodos = sortTodos(parseTodos);
+
+    setSortedParams(parseSortedParams);
+    setTodos(sortedTodos);
     setIsLoaded(true);
   };
 
@@ -37,7 +47,7 @@ const App = (): React.JSX.Element => {
         status: '',
         createdAt: new Date()
       };
-      console.log(createdTodo);
+
       const newTodos = [...todos, createdTodo];
 
       setTodos(newTodos);
@@ -83,34 +93,37 @@ const App = (): React.JSX.Element => {
     [todos]
   );
 
-  const toggleAscSortPubDate = useCallback(() => {
-    setAscSortPubDate(prevState => !prevState);
+  const toggleSortedParams = useCallback((sortedParam: keyof IsortedParams) => {
+    setSortedParams(prevState => {
+      const actualState = {
+        ...prevState,
+        [sortedParam]: !prevState[sortedParam]
+      };
+
+      AsyncStorage.setItem('sortedParams', JSON.stringify(actualState));
+
+      return actualState;
+    });
   }, []);
 
-  const toggleAscSortStatus = useCallback(() => {
-    setAscSortStatus(prevState => !prevState);
-  }, []);
-
-  const sortTodos = () => {
-    const sortedDateTodos = sortDateTodos(todos, ascSortPubDate);
-    const sortedStatusTodos = sortStatusTodos(sortedDateTodos, ascSortStatus);
+  const sortTodos = (todos: Array<ITodo>) => {
+    const sortedDateTodos = sortDateTodos(todos, sortedParams.ascSortPubDate);
+    const sortedStatusTodos = sortStatusTodos(
+      sortedDateTodos,
+      sortedParams.ascSortStatus
+    );
 
     return sortedStatusTodos;
   };
 
-  const sortedTodos = useMemo(
-    () => sortTodos(),
-    [todos, ascSortPubDate, ascSortStatus]
-  );
+  const sortedTodos = useMemo(() => sortTodos(todos), [todos, sortedParams]);
 
   return (
     <SafeAreaView style={s`flex-1 bg-violet-100`}>
       <Header />
       <SortBarTodos
-        ascSortPubDate={ascSortPubDate}
-        toggleAscSortPubDate={toggleAscSortPubDate}
-        ascSortStatus={ascSortStatus}
-        toggleAscSortStatus={toggleAscSortStatus}
+        sortedParams={sortedParams}
+        toggleSortedParams={toggleSortedParams}
       />
       <TodosList
         todos={sortedTodos}

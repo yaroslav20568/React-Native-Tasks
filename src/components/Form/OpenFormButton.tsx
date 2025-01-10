@@ -21,9 +21,12 @@ const OpenFormButton = ({
       activeOpacity={0.7}
       style={[
         s`${
-          !formIsOpen ? 'bottom-full mb-8' : 'top-8'
-        } absolute z-10 right-6 w-14 h-14 bg-violet-500 justify-center items-center rounded-full`,
-        { boxShadow: '0 0 10 1 rgba(153, 102, 204, 1)' }
+          formIsOpen ? 'top-8' : ''
+        } absolute z-10 right-4 w-12 h-12 bg-violet-500 justify-center items-center rounded-full`,
+        {
+          boxShadow: '0 0 10 1 rgba(153, 102, 204, 1)',
+          bottom: !formIsOpen ? -136 : 0
+        }
       ]}
       onPress={toggleOpenForm}
       entering={FadeInRight.duration(700).easing(Easing.ease)}

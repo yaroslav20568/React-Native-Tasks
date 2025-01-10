@@ -43,7 +43,7 @@ const Todo = ({
 
   return (
     <Animated.View
-      layout={Layout.delay(500).duration(200)}
+      layout={Layout.duration(200)}
       entering={FadeInLeft.delay(500 * index).duration(500)}
       exiting={FadeOutLeft.duration(500)}
       style={s`${todoStatusColors[status]} py-4 px-3 rounded-2xl`}

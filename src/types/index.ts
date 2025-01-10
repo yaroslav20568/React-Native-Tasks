@@ -19,4 +19,9 @@ interface ITodo {
 interface IAddFormData
   extends Pick<ITodo, 'title' | 'description' | 'executionAt' | 'location'> {}
 
-export type { TTodoStatus, ITodo, IAddFormData };
+interface IsortedParams {
+  ascSortPubDate: boolean;
+  ascSortStatus: boolean;
+}
+
+export type { TTodoStatus, ITodo, IAddFormData, IsortedParams };

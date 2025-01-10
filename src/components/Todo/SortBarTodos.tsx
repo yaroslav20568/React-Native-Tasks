@@ -2,46 +2,46 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { s } from 'react-native-wind';
+import { IsortedParams } from '../../types';
 
 interface IProps {
-  ascSortPubDate: boolean;
-  toggleAscSortPubDate: () => void;
-  ascSortStatus: boolean;
-  toggleAscSortStatus: () => void;
+  sortedParams: IsortedParams;
+  toggleSortedParams: (sortedParam: keyof IsortedParams) => void;
 }
 
-const SortBarTodos = ({
-  ascSortPubDate,
-  toggleAscSortPubDate,
-  ascSortStatus,
-  toggleAscSortStatus
-}: IProps) => {
+const SortBarTodos = ({ sortedParams, toggleSortedParams }: IProps) => {
   return (
     <View style={s`pt-4 px-4 flex-row`}>
       <TouchableOpacity
         activeOpacity={0.7}
-        onPress={toggleAscSortPubDate}
+        onPress={() => toggleSortedParams('ascSortPubDate')}
         style={s`flex-row items-center bg-violet-500 py-1 px-2 rounded-md mr-2`}
       >
         <Text style={s`text-white font-bold mr-2`}>
-          Date created {ascSortPubDate ? 'ASC' : 'DESC'}
+          Date created {sortedParams.ascSortPubDate ? 'ASC' : 'DESC'}
         </Text>
         <Entypo
-          name={ascSortPubDate ? 'chevron-thin-down' : 'chevron-thin-up'}
+          name={
+            sortedParams.ascSortPubDate
+              ? 'chevron-thin-down'
+              : 'chevron-thin-up'
+          }
           size={15}
           color='#fff'
         />
       </TouchableOpacity>
       <TouchableOpacity
         activeOpacity={0.7}
-        onPress={toggleAscSortStatus}
+        onPress={() => toggleSortedParams('ascSortStatus')}
         style={s`flex-row items-center bg-violet-500 py-1 px-2 rounded-md`}
       >
         <Text style={s`text-white font-bold mr-2`}>
-          Status {ascSortStatus ? 'ASC' : 'DESC'}
+          Status {sortedParams.ascSortStatus ? 'ASC' : 'DESC'}
         </Text>
         <Entypo
-          name={ascSortStatus ? 'chevron-thin-down' : 'chevron-thin-up'}
+          name={
+            sortedParams.ascSortStatus ? 'chevron-thin-down' : 'chevron-thin-up'
+          }
           size={15}
           color='#fff'
         />

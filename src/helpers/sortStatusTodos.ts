@@ -1,4 +1,5 @@
 import { ITodo } from '../types';
+import { TodoStatus } from '../constants';
 
 const sortStatusTodos = (todos: Array<ITodo>, ascSortStatus: boolean) => {
   return [
@@ -14,14 +15,14 @@ const sortStatusTodos = (todos: Array<ITodo>, ascSortStatus: boolean) => {
         ascSortStatus
           ? new Map([
               ['', []],
-              ['In Progress', []],
-              ['Completed', []],
-              ['Cancelled', []]
+              [TodoStatus.InProgres, []],
+              [TodoStatus.Completed, []],
+              [TodoStatus.Cancelled, []]
             ])
           : new Map([
-              ['Cancelled', []],
-              ['Completed', []],
-              ['In Progress', []],
+              [TodoStatus.Cancelled, []],
+              [TodoStatus.Completed, []],
+              [TodoStatus.InProgres, []],
               ['', []]
             ])
       )

@@ -4,7 +4,13 @@ import { s } from 'react-native-wind';
 import uuid from 'react-native-uuid';
 import { useToast } from 'react-native-toast-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Header, SortBarTodos, TodoAddForm, TodosList } from './src/components';
+import {
+  Header,
+  SortBarTodos,
+  TodoAddForm,
+  TodosList,
+  TodosInfoStatuses
+} from './src/components';
 import { ITodo, IAddFormData, TTodoStatus, IsortedParams } from './src/types';
 import { sortDateTodos, sortStatusTodos } from './src/helpers';
 
@@ -125,6 +131,7 @@ const App = (): React.JSX.Element => {
         sortedParams={sortedParams}
         toggleSortedParams={toggleSortedParams}
       />
+      <TodosInfoStatuses />
       <TodosList
         todos={sortedTodos}
         isLoaded={isLoaded}

@@ -42,7 +42,7 @@ const TodosList = ({
       )}
       ItemSeparatorComponent={itemSeparatorComponent}
       ListEmptyComponent={listEmptyComponent}
-      contentContainerStyle={s`py-6 px-4`}
+      contentContainerStyle={s`pt-4 pb-6 px-4`}
     />
   );
 };

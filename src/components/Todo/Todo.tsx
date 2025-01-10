@@ -23,18 +23,23 @@ const Todo = ({
   title,
   description,
   executionAt,
+  location,
   status,
   index,
   deleteTodo,
   changeStatusTodo
 }: IProps): React.JSX.Element => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [moreInfoIsOpen, setMoreInfoIsOpen] = useState<boolean>(false);
 
   const onDeleteTodo = () => deleteTodo(id);
 
   const onChangeStatusTodo = useCallback((status: TTodoStatus) => {
     changeStatusTodo(id, status);
   }, []);
+
+  const toggleOpenMoreInfo = () => {
+    setMoreInfoIsOpen(prevState => !prevState);
+  };
 
   return (
     <Animated.View
@@ -51,15 +56,21 @@ const Todo = ({
           <View>
             <TouchableOpacity
               activeOpacity={0.7}
-              onPress={() => setIsOpen(prevState => !prevState)}
+              onPress={toggleOpenMoreInfo}
+              style={s`self-start`}
             >
               <Text style={s`text-black font-medium mb-0.5`}>
-                {!isOpen ? 'Open' : 'Close'} description
+                {!moreInfoIsOpen ? 'Open' : 'Close'} more information
               </Text>
             </TouchableOpacity>
-            {isOpen && (
-              <View style={[s`absolute bg-white z-10 w-full top-full`]}>
-                <Text style={s`text-black`}>{description}</Text>
+            {moreInfoIsOpen && (
+              <View
+                style={[
+                  s`absolute ${todoStatusColors[status]} flex-row z-10 w-full top-full`
+                ]}
+              >
+                <Text style={s`text-black`}>{description}, </Text>
+                <Text style={s`text-black`}>{location}</Text>
               </View>
             )}
           </View>

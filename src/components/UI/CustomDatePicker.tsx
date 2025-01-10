@@ -35,12 +35,13 @@ const CustomDatePicker = <T extends FieldValues>({
     setOpenDatePicker(false);
   };
 
+  const onOpen = (): void => {
+    setOpenDatePicker(true);
+  };
+
   return (
     <>
-      <TouchableOpacity
-        onPress={() => setOpenDatePicker(true)}
-        style={buttonStyle}
-      >
+      <TouchableOpacity onPress={onOpen} style={buttonStyle}>
         <SimpleLineIcons name='calendar' size={18} color={iconColor} />
         <Text style={s`ml-3`}>
           {moment(currentDate).format('MMMM Do YYYY, HH:mm')}

@@ -67,14 +67,14 @@ const TodoAddForm = ({ addTodo }: IProps): React.JSX.Element => {
   }, [formIsOpen]);
 
   const toggleOpenForm = (): void => {
-    setFormIsOpen(prevValue => !prevValue);
+    setFormIsOpen(prevState => !prevState);
   };
 
   const onAddTodo = (todoFormValues: IAddFormData) => {
     addTodo(todoFormValues);
     reset();
     setTimeout(() => {
-      setFormIsOpen(prevValue => !prevValue);
+      setFormIsOpen(prevState => !prevState);
     }, 500);
   };
 

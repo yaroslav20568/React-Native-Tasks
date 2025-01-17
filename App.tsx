@@ -13,6 +13,8 @@ import {
 } from './src/components';
 import { ITodo, IAddFormData, TTodoStatus, IsortedParams } from './src/types';
 import { sortDateTodos, sortStatusTodos } from './src/helpers';
+import { useColorScheme } from './src/hooks';
+import { ColorSchemes } from './src/constants';
 
 const App = (): React.JSX.Element => {
   const [todos, setTodos] = useState<Array<ITodo>>([]);
@@ -22,6 +24,7 @@ const App = (): React.JSX.Element => {
     ascSortStatus: true
   });
   const toast = useToast();
+  const { setInitColorScheme } = useColorScheme();
 
   useEffect(() => {
     getDataFromStorage();
@@ -34,14 +37,17 @@ const App = (): React.JSX.Element => {
     const stringSortedParams =
       (await AsyncStorage.getItem('sortedParams')) ||
       '{"ascSortPubDate": true, "ascSortStatus": true}';
+    const colorScheme = ((await AsyncStorage.getItem('colorScheme')) ||
+      'light') as keyof typeof ColorSchemes;
 
     const parseTodos: Array<ITodo> = JSON.parse(stringTodos);
     const parseSortedParams: IsortedParams = JSON.parse(stringSortedParams);
 
     const sortedTodos = sortTodos(parseTodos);
 
-    setSortedParams(parseSortedParams);
     setTodos(sortedTodos);
+    setSortedParams(parseSortedParams);
+    setInitColorScheme(colorScheme);
     setIsLoaded(true);
   };
 

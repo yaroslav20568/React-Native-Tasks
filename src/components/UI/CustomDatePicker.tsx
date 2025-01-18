@@ -11,6 +11,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import moment from 'moment';
 import DatePicker from 'react-native-date-picker';
 import { Control, Controller, FieldValues, Path } from 'react-hook-form';
+import { ColorSchemes } from '../../constants';
 
 interface IProps<T extends FieldValues> {
   control: Control<T>;
@@ -21,6 +22,7 @@ interface IProps<T extends FieldValues> {
   textStyle?: StyleProp<TextStyle>;
   currentDate: Date;
   setCurrentDate: (date: Date) => void;
+  theme: keyof typeof ColorSchemes;
 }
 
 const CustomDatePicker = <T extends FieldValues>({
@@ -31,7 +33,8 @@ const CustomDatePicker = <T extends FieldValues>({
   iconColor,
   textStyle,
   currentDate,
-  setCurrentDate
+  setCurrentDate,
+  theme
 }: IProps<T>): React.JSX.Element => {
   const [openDatePicker, setOpenDatePicker] = useState<boolean>(false);
 
@@ -54,7 +57,7 @@ const CustomDatePicker = <T extends FieldValues>({
       <Controller
         control={control}
         name={name}
-        render={({ field: { onChange, value }, fieldState: { error } }) => (
+        render={({ field: { onChange }, fieldState: { error } }) => (
           <>
             <DatePicker
               modal
@@ -68,6 +71,7 @@ const CustomDatePicker = <T extends FieldValues>({
               }}
               onCancel={onCancel}
               title='Select date and time'
+              theme={theme}
             />
             {error && <Text style={errorTextStyle}>{error.message}</Text>}
           </>

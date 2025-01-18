@@ -24,7 +24,7 @@ const App = (): React.JSX.Element => {
     ascSortStatus: true
   });
   const toast = useToast();
-  const { setInitColorScheme } = useColorScheme();
+  const { colorScheme, setInitColorScheme } = useColorScheme();
 
   useEffect(() => {
     getDataFromStorage();
@@ -131,7 +131,7 @@ const App = (): React.JSX.Element => {
   const sortedTodos = useMemo(() => sortTodos(todos), [todos, sortedParams]);
 
   return (
-    <SafeAreaView style={s`flex-1 bg-violet-100`}>
+    <SafeAreaView style={s`flex-1 bg-violet100-${colorScheme}`}>
       <Header />
       <SortBarTodos
         sortedParams={sortedParams}

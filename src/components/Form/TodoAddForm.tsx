@@ -19,6 +19,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { OpenFormButton, CustomInputText } from '..';
 import { IAddFormData } from '../../types';
 import CustomDatePicker from '../UI/CustomDatePicker';
+import { useColorScheme } from '../../hooks';
+import { themeColors } from '../../constants';
 
 interface IProps {
   addTodo: (addFormData: IAddFormData) => void;
@@ -59,6 +61,7 @@ const TodoAddForm = ({ addTodo }: IProps): React.JSX.Element => {
     resolver: yupResolver(schema)
   });
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
+  const { colorScheme } = useColorScheme();
   const { height } = useWindowDimensions();
   const translateY = useSharedValue<number>(-height);
 
@@ -90,7 +93,10 @@ const TodoAddForm = ({ addTodo }: IProps): React.JSX.Element => {
 
   return (
     <Animated.View
-      style={[s`absolute t-0 bg-violet-200 w-full z-1`, todoAddFormStyles]}
+      style={[
+        s`absolute t-0 bg-violet200-${colorScheme} w-full z-1`,
+        todoAddFormStyles
+      ]}
     >
       <OpenFormButton toggleOpenForm={toggleOpenForm} formIsOpen={formIsOpen} />
       <ScrollView>
@@ -100,10 +106,10 @@ const TodoAddForm = ({ addTodo }: IProps): React.JSX.Element => {
               control={control}
               name='title'
               placeholder='Task title'
-              inputStyle={s`bg-violet-400 rounded-xl border-2 border-violet-500 text-white py-4 px-4`}
-              errorTextStyle={s`text-red-400 mt-1 ml-5`}
-              placeholderTextColor='#fff'
-              selectionColor='#fff'
+              inputStyle={s`bg-violet400-${colorScheme} rounded-xl border-2 border-violet500-${colorScheme} text-white-${colorScheme} py-4 px-4`}
+              errorTextStyle={s`text-red400-${colorScheme} mt-1 ml-5`}
+              placeholderTextColor={themeColors.white[colorScheme]}
+              selectionColor={themeColors.white[colorScheme]}
             />
           </View>
           <View style={s`mb-4`}>
@@ -111,22 +117,23 @@ const TodoAddForm = ({ addTodo }: IProps): React.JSX.Element => {
               control={control}
               name='description'
               placeholder='Task description'
-              inputStyle={s`bg-violet-400 rounded-xl border-2 border-violet-500 text-white py-4 px-4`}
-              errorTextStyle={s`text-red-400 mt-1 ml-5`}
-              placeholderTextColor='#fff'
-              selectionColor='#fff'
+              inputStyle={s`bg-violet400-${colorScheme} rounded-xl border-2 border-violet500-${colorScheme} text-white-${colorScheme} py-4 px-4`}
+              errorTextStyle={s`text-red400-${colorScheme} mt-1 ml-5`}
+              placeholderTextColor={themeColors.white[colorScheme]}
+              selectionColor={themeColors.white[colorScheme]}
             />
           </View>
           <View style={s`mb-4`}>
             <CustomDatePicker
               control={control}
               name='executionAt'
-              buttonStyle={s`flex-row items-center bg-violet-400 rounded-xl border-2 border-violet-500 text-white py-4 px-4`}
-              errorTextStyle={s`text-red-400 mt-1 ml-5`}
-              iconColor='#fff'
-              textStyle={s`text-white ml-2`}
+              buttonStyle={s`flex-row items-center bg-violet400-${colorScheme} rounded-xl border-2 border-violet500-${colorScheme} text-white-${colorScheme} py-4 px-4`}
+              errorTextStyle={s`text-red400-${colorScheme} mt-1 ml-5`}
+              iconColor={themeColors.white[colorScheme]}
+              textStyle={s`text-white-${colorScheme} ml-2`}
               currentDate={currentDate}
               setCurrentDate={setCurrentDate}
+              theme={colorScheme}
             />
           </View>
           <View style={s`mb-4`}>
@@ -134,18 +141,20 @@ const TodoAddForm = ({ addTodo }: IProps): React.JSX.Element => {
               control={control}
               name='location'
               placeholder='Location'
-              inputStyle={s`bg-violet-400 rounded-xl border-2 border-violet-500 text-white py-4 px-4`}
-              errorTextStyle={s`text-red-400 mt-1 ml-5`}
-              placeholderTextColor='#fff'
-              selectionColor='#fff'
+              inputStyle={s`bg-violet400-${colorScheme} rounded-xl border-2 border-violet500-${colorScheme} text-white-${colorScheme} py-4 px-4`}
+              errorTextStyle={s`text-red400-${colorScheme} mt-1 ml-5`}
+              placeholderTextColor={themeColors.white[colorScheme]}
+              selectionColor={themeColors.white[colorScheme]}
             />
           </View>
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={handleSubmit(onAddTodo)}
-            style={s`bg-violet-500 rounded-xl py-3 px-6 mt-4`}
+            style={s`bg-violet500-${colorScheme} rounded-xl py-3 px-6 mt-4`}
           >
-            <Text style={s`text-center text-base text-white capitalize`}>
+            <Text
+              style={s`text-center text-base text-white-${colorScheme} capitalize`}
+            >
               Add todo
             </Text>
           </TouchableOpacity>

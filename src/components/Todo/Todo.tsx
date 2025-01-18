@@ -10,7 +10,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
 import { ITodo, TTodoStatus } from '../../types';
 import DropDownMenu from '../UI/DropDownMenu';
-import { TodoStatus, todoStatusColors } from '../../constants';
+import { themeColors, TodoStatus, todoStatusColors } from '../../constants';
+import { useColorScheme } from '../../hooks';
 
 interface IProps extends ITodo {
   index: number;
@@ -30,6 +31,7 @@ const Todo = ({
   changeStatusTodo
 }: IProps): React.JSX.Element => {
   const [moreInfoIsOpen, setMoreInfoIsOpen] = useState<boolean>(false);
+  const { colorScheme } = useColorScheme();
 
   const onDeleteTodo = () => deleteTodo(id);
 
@@ -46,11 +48,13 @@ const Todo = ({
       layout={Layout.duration(200)}
       entering={FadeInLeft.delay(500 * index).duration(500)}
       exiting={FadeOutLeft.duration(500)}
-      style={s`${todoStatusColors[status]} py-4 px-3 rounded-2xl`}
+      style={s`${todoStatusColors[status]}-${colorScheme} py-4 px-3 rounded-2xl`}
     >
       <View style={s`flex-row items-center justify-between`}>
         <View>
-          <Text style={s`text-base text-violet-500 font-medium mb-1`}>
+          <Text
+            style={s`text-base text-violet500_1-${colorScheme} font-medium mb-1`}
+          >
             {title}
           </Text>
           <View>
@@ -59,31 +63,41 @@ const Todo = ({
               onPress={toggleOpenMoreInfo}
               style={s`self-start`}
             >
-              <Text style={s`text-black font-medium mb-0.5`}>
+              <Text style={s`text-gray-${colorScheme} font-medium mb-0.5`}>
                 {!moreInfoIsOpen ? 'Open' : 'Close'} more information
               </Text>
             </TouchableOpacity>
             {moreInfoIsOpen && (
               <View
                 style={[
-                  s`absolute ${todoStatusColors[status]} flex-row z-10 w-full top-full`
+                  s`absolute ${todoStatusColors[status]}-${colorScheme} flex-row z-10 w-full top-full`
                 ]}
               >
-                <Text style={s`text-black`}>{description}, </Text>
-                <Text style={s`text-black`}>{location}</Text>
+                <Text style={s`text-gray-${colorScheme}`}>{description}, </Text>
+                <Text style={s`text-gray-${colorScheme}`}>{location}</Text>
               </View>
             )}
           </View>
-          <Text>{moment(executionAt).format('MMMM Do YYYY, HH:mm')}</Text>
+          <Text style={s`text-gray-${colorScheme}`}>
+            {moment(executionAt).format('MMMM Do YYYY, HH:mm')}
+          </Text>
         </View>
         <View style={s`flex-row items-center`}>
           <DropDownMenu
             defaultValue={status}
             items={Object.values(TodoStatus)}
             onPress={onChangeStatusTodo}
+            iconColor={themeColors.gray[colorScheme]}
+            backgroundColor={themeColors.white_1[colorScheme]}
+            activeTextStyle={s`text-violet500_1-${colorScheme}`}
+            textStyle={s`text-gray-${colorScheme}`}
           />
           <TouchableOpacity onPress={onDeleteTodo} style={s`ml-6`}>
-            <AntDesign name='delete' size={25} color='#000' />
+            <AntDesign
+              name='delete'
+              size={25}
+              color={themeColors.gray[colorScheme]}
+            />
           </TouchableOpacity>
         </View>
       </View>

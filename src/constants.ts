@@ -10,7 +10,8 @@ enum ColorSchemes {
 }
 
 enum ScreenNames {
-  Home = 'Home'
+  Home = 'Home',
+  TodoLog = 'TodoLog'
 }
 
 const themeColors = {

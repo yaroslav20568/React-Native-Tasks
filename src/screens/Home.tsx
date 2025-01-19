@@ -68,6 +68,7 @@ const Home = (): React.JSX.Element => {
         id: uuid.v4(),
         ...todoFormValues,
         status: '',
+        logActions: [{ name: 'Created on', timestamp: new Date() }],
         createdAt: new Date()
       };
 
@@ -119,9 +120,16 @@ const Home = (): React.JSX.Element => {
           if (todo.id === id) {
             if (todo.status !== status) {
               isChanged = true;
-            }
 
-            todo.status = status;
+              todo.status = status;
+              todo.logActions = [
+                ...todo.logActions,
+                {
+                  name: `Changed status on ${status.toLowerCase()}`,
+                  timestamp: new Date()
+                }
+              ];
+            }
           }
 
           return todo;
@@ -143,18 +151,21 @@ const Home = (): React.JSX.Element => {
     [todos]
   );
 
-  const toggleSortedParams = useCallback((sortedParam: keyof IsortedParams) => {
-    setSortedParams(prevState => {
-      const actualState = {
-        ...prevState,
-        [sortedParam]: !prevState[sortedParam]
-      };
+  const toggleSortedParams = useCallback(
+    (sortedParam: keyof IsortedParams): void => {
+      setSortedParams(prevState => {
+        const actualState = {
+          ...prevState,
+          [sortedParam]: !prevState[sortedParam]
+        };
 
-      AsyncStorage.setItem('sortedParams', JSON.stringify(actualState));
+        AsyncStorage.setItem('sortedParams', JSON.stringify(actualState));
 
-      return actualState;
-    });
-  }, []);
+        return actualState;
+      });
+    },
+    []
+  );
 
   const sortTodos = (todos: Array<ITodo>) => {
     const sortedDateTodos = sortDateTodos(todos, sortedParams.ascSortPubDate);
@@ -170,7 +181,7 @@ const Home = (): React.JSX.Element => {
 
   return (
     <SafeAreaView style={s`flex-1 bg-violet100-${colorScheme}`}>
-      <Header />
+      <Header title='Todos' />
       <SortBarTodos
         sortedParams={sortedParams}
         toggleSortedParams={toggleSortedParams}

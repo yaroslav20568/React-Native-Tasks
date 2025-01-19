@@ -20,6 +20,7 @@ const TodosList = ({
   const itemSeparatorComponent = (): React.JSX.Element => (
     <View style={s`h-4`}></View>
   );
+
   const listEmptyComponent = (): React.JSX.Element =>
     isLoaded ? (
       <Text style={s`text-base font-medium`}>

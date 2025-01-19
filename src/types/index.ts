@@ -8,7 +8,16 @@ type TTodoStatus =
 
 type TRootStackParamList = {
   Home: undefined;
+  TodoLog: {
+    todoTitle: string;
+    todoLogActions: Array<ILogAction>;
+  };
 };
+
+interface ILogAction {
+  name: string;
+  timestamp: Date;
+}
 
 interface ITodo {
   id: string;
@@ -17,6 +26,7 @@ interface ITodo {
   executionAt: Date;
   location: string;
   status: TTodoStatus;
+  logActions: Array<ILogAction>;
   createdAt: Date;
 }
 
@@ -31,6 +41,7 @@ interface IsortedParams {
 export type {
   TTodoStatus,
   TRootStackParamList,
+  ILogAction,
   ITodo,
   IAddFormData,
   IsortedParams

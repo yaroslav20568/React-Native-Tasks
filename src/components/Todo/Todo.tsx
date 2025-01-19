@@ -7,10 +7,17 @@ import Animated, {
 } from 'react-native-reanimated';
 import { s } from 'react-native-wind';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 import moment from 'moment';
-import { ITodo, TTodoStatus } from '../../types';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { ITodo, TRootStackParamList, TTodoStatus } from '../../types';
 import DropDownMenu from '../UI/DropDownMenu';
-import { themeColors, TodoStatus, todoStatusColors } from '../../constants';
+import {
+  ScreenNames,
+  themeColors,
+  TodoStatus,
+  todoStatusColors
+} from '../../constants';
 import { useColorScheme } from '../../hooks';
 
 interface IProps extends ITodo {
@@ -26,21 +33,30 @@ const Todo = ({
   executionAt,
   location,
   status,
+  logActions,
   index,
   deleteTodo,
   changeStatusTodo
 }: IProps): React.JSX.Element => {
   const [moreInfoIsOpen, setMoreInfoIsOpen] = useState<boolean>(false);
   const { colorScheme } = useColorScheme();
+  const navigation = useNavigation<NavigationProp<TRootStackParamList>>();
 
   const onDeleteTodo = () => deleteTodo(id);
 
-  const onChangeStatusTodo = useCallback((status: TTodoStatus) => {
+  const onChangeStatusTodo = useCallback((status: TTodoStatus): void => {
     changeStatusTodo(id, status);
   }, []);
 
-  const toggleOpenMoreInfo = () => {
+  const toggleOpenMoreInfo = (): void => {
     setMoreInfoIsOpen(prevState => !prevState);
+  };
+
+  const onNavigateToTodoLog = (): void => {
+    navigation.navigate(ScreenNames.TodoLog, {
+      todoTitle: title,
+      todoLogActions: logActions
+    });
   };
 
   return (
@@ -82,23 +98,34 @@ const Todo = ({
             {moment(executionAt).format('MMMM Do YYYY, HH:mm')}
           </Text>
         </View>
-        <View style={s`flex-row items-center`}>
-          <DropDownMenu
-            defaultValue={status}
-            items={Object.values(TodoStatus)}
-            onPress={onChangeStatusTodo}
-            iconColor={themeColors.gray[colorScheme]}
-            backgroundColor={themeColors.white_1[colorScheme]}
-            activeTextStyle={s`text-violet500_1-${colorScheme}`}
-            textStyle={s`text-gray-${colorScheme}`}
-          />
-          <TouchableOpacity onPress={onDeleteTodo} style={s`ml-6`}>
-            <AntDesign
-              name='delete'
-              size={25}
-              color={themeColors.gray[colorScheme]}
+        <View>
+          <View style={s`flex-row items-center mb-1`}>
+            <DropDownMenu
+              defaultValue={status}
+              items={Object.values(TodoStatus)}
+              onPress={onChangeStatusTodo}
+              iconColor={themeColors.gray[colorScheme]}
+              backgroundColor={themeColors.white_1[colorScheme]}
+              activeTextStyle={s`text-violet500_1-${colorScheme}`}
+              textStyle={s`text-gray-${colorScheme}`}
             />
-          </TouchableOpacity>
+            <TouchableOpacity onPress={onDeleteTodo} style={s`ml-6`}>
+              <AntDesign
+                name='delete'
+                size={25}
+                color={themeColors.gray[colorScheme]}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={s`flex-row items-center`}>
+            <TouchableOpacity onPress={onNavigateToTodoLog}>
+              <Fontisto
+                name='history'
+                size={25}
+                color={themeColors.gray[colorScheme]}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </Animated.View>

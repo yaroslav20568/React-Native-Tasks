@@ -7,7 +7,12 @@ import Stacks from './src/navigation/Stacks';
 
 const App = (): React.JSX.Element => {
   return (
-    <ToastProvider placement='top' duration={2000} animationDuration={500}>
+    <ToastProvider
+      normalColor='gray'
+      placement='top'
+      duration={2000}
+      animationDuration={500}
+    >
       <MenuProvider>
         <ThemeProvider>
           <Stacks />

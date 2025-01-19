@@ -4,6 +4,8 @@ import { s } from 'react-native-wind';
 import uuid from 'react-native-uuid';
 import { useToast } from 'react-native-toast-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import PushNotification from 'react-native-push-notification';
+import moment from 'moment';
 import {
   Header,
   SortBarTodos,
@@ -27,6 +29,15 @@ const App = (): React.JSX.Element => {
   const { colorScheme, setInitColorScheme } = useColorScheme();
 
   useEffect(() => {
+    PushNotification.createChannel(
+      {
+        channelId: 'channel-app',
+        channelName: 'channel-app',
+        vibrate: true
+      },
+      () => {}
+    );
+
     getDataFromStorage();
   }, []);
 
@@ -66,6 +77,18 @@ const App = (): React.JSX.Element => {
       await AsyncStorage.setItem('todos', JSON.stringify(newTodos));
 
       toast.show('Todo added. Check it out in the todos, manage todo list');
+
+      PushNotification.localNotificationSchedule({
+        id: createdTodo.id.split('-')[0].replace(/\D/g, ''),
+        title: 'Scheduled task',
+        message: `${createdTodo.title}. Today at ${moment(
+          createdTodo.executionAt
+        ).format('HH:mm')}`,
+        smallIcon: 'ic_launcher_round',
+        largeIcon: 'ic_launcher_round',
+        channelId: 'channel-app',
+        date: moment(createdTodo.executionAt).subtract(30, 'minutes').toDate()
+      });
     },
     [todos]
   );
@@ -78,6 +101,10 @@ const App = (): React.JSX.Element => {
       await AsyncStorage.setItem('todos', JSON.stringify(newTodos));
 
       toast.show('Todo deleted. Check it out in the todos, manage todo list');
+
+      PushNotification.cancelLocalNotification(
+        id.split('-')[0].replace(/\D/g, '')
+      );
     },
     [todos]
   );
@@ -85,10 +112,18 @@ const App = (): React.JSX.Element => {
   const changeStatusTodo = useCallback(
     async (id: string, status: TTodoStatus): Promise<void> => {
       let newTodos: Array<ITodo> = [];
+      let isChanged = false;
 
       setTodos(prevTodos => {
         const actualTodos = prevTodos.map(todo => {
-          if (todo.id === id) todo.status = status;
+          if (todo.id === id) {
+            if (todo.status !== status) {
+              isChanged = true;
+            }
+
+            todo.status = status;
+          }
+
           return todo;
         });
 
@@ -96,11 +131,14 @@ const App = (): React.JSX.Element => {
 
         return actualTodos;
       });
-      await AsyncStorage.setItem('todos', JSON.stringify(newTodos));
 
-      toast.show(
-        'Todo changed status. Check it out in the todos, manage todo list'
-      );
+      if (isChanged) {
+        await AsyncStorage.setItem('todos', JSON.stringify(newTodos));
+
+        toast.show(
+          'Todo changed status. Check it out in the todos, manage todo list'
+        );
+      }
     },
     [todos]
   );

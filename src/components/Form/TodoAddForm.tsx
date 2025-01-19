@@ -37,9 +37,9 @@ const schema = yup
       .date()
       .required('Required')
       .min(
-        moment(new Date()).add(1, 'day'),
+        moment(new Date()).add(30, 'minutes'),
         `The execution time should be one day later, after ${moment(new Date())
-          .add(1, 'day')
+          .add(30, 'minutes')
           .format('MMMM Do YYYY, HH:mm')}`
       ),
     location: yup

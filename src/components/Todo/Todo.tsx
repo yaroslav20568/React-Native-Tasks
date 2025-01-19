@@ -1,4 +1,4 @@
-import React, { useState, memo, useEffect, useCallback } from 'react';
+import React, { useState, memo, useCallback } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Animated, {
   Layout,

@@ -9,6 +9,10 @@ enum ColorSchemes {
   dark = 'dark'
 }
 
+enum ScreenNames {
+  Home = 'Home'
+}
+
 const themeColors = {
   violet100: {
     light: '#ede9fe',
@@ -67,4 +71,4 @@ const todoStatusColors = {
   [TodoStatus.Cancelled]: 'bg-red200'
 };
 
-export { TodoStatus, ColorSchemes, themeColors, todoStatusColors };
+export { TodoStatus, ColorSchemes, ScreenNames, themeColors, todoStatusColors };

@@ -6,6 +6,10 @@ type TTodoStatus =
   | TodoStatus.Completed
   | TodoStatus.Cancelled;
 
+type TRootStackParamList = {
+  Home: undefined;
+};
+
 interface ITodo {
   id: string;
   title: string;
@@ -24,4 +28,10 @@ interface IsortedParams {
   ascSortStatus: boolean;
 }
 
-export type { TTodoStatus, ITodo, IAddFormData, IsortedParams };
+export type {
+  TTodoStatus,
+  TRootStackParamList,
+  ITodo,
+  IAddFormData,
+  IsortedParams
+};

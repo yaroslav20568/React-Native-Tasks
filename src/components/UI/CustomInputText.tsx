@@ -14,8 +14,8 @@ interface IProps<T extends FieldValues> {
   placeholder: string;
   inputStyle?: StyleProp<TextStyle>;
   errorTextStyle?: StyleProp<TextStyle>;
-  placeholderTextColor?: ColorValue | undefined;
-  selectionColor?: ColorValue | undefined;
+  placeholderTextColor?: ColorValue;
+  selectionColor?: ColorValue;
 }
 
 const CustomInputText = <T extends FieldValues>({

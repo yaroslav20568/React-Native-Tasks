@@ -11,7 +11,8 @@ enum ColorSchemes {
 
 enum ScreenNames {
   Home = 'Home',
-  TodoLog = 'TodoLog'
+  TodoLog = 'TodoLog',
+  Map = 'Map'
 }
 
 const themeColors = {

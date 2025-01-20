@@ -4,7 +4,10 @@ export { default as TodoAddForm } from './Form/TodoAddForm';
 export { default as OpenFormButton } from './Form/OpenFormButton';
 
 export { default as CustomInputText } from './UI/CustomInputText';
-export { default as DropDownMenu } from './UI/DropDownMenu';
+export { default as CustomDatePicker } from './UI/CustomDatePicker';
+export { default as CustomGooglePlacesAutocomplete } from './UI/CustomGooglePlacesAutocomplete';
+export { default as CustomImagePicker } from './UI/CustomImagePicker';
+export { default as CustomDropDownMenu } from './UI/CustomDropDownMenu';
 
 export { default as TodosList } from './Todo/TodosList';
 export { default as Todo } from './Todo/Todo';

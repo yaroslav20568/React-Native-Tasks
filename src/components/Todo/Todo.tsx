@@ -8,10 +8,11 @@ import Animated, {
 import { s } from 'react-native-wind';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import moment from 'moment';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { ITodo, TRootStackParamList, TTodoStatus } from '../../types';
-import DropDownMenu from '../UI/DropDownMenu';
+import { CustomDropDownMenu } from '..';
 import {
   ScreenNames,
   themeColors,
@@ -59,6 +60,10 @@ const Todo = ({
     });
   };
 
+  const onNavigateToMap = (): void => {
+    navigation.navigate(ScreenNames.Map);
+  };
+
   return (
     <Animated.View
       layout={Layout.duration(200)}
@@ -90,7 +95,9 @@ const Todo = ({
                 ]}
               >
                 <Text style={s`text-gray-${colorScheme}`}>{description}, </Text>
-                <Text style={s`text-gray-${colorScheme}`}>{location}</Text>
+                <Text style={s`text-gray-${colorScheme}`}>
+                  {location.address}
+                </Text>
               </View>
             )}
           </View>
@@ -99,8 +106,8 @@ const Todo = ({
           </Text>
         </View>
         <View>
-          <View style={s`flex-row items-center mb-1`}>
-            <DropDownMenu
+          <View style={s`flex-row items-center mb-1.5`}>
+            <CustomDropDownMenu
               defaultValue={status}
               items={Object.values(TodoStatus)}
               onPress={onChangeStatusTodo}
@@ -117,10 +124,17 @@ const Todo = ({
               />
             </TouchableOpacity>
           </View>
-          <View style={s`flex-row items-center`}>
+          <View style={s`flex-row items-center justify-between`}>
             <TouchableOpacity onPress={onNavigateToTodoLog}>
               <Fontisto
                 name='history'
+                size={25}
+                color={themeColors.gray[colorScheme]}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onNavigateToMap}>
+              <FontAwesome5
+                name='map-marked-alt'
                 size={25}
                 color={themeColors.gray[colorScheme]}
               />

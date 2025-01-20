@@ -12,6 +12,7 @@ type TRootStackParamList = {
     todoTitle: string;
     todoLogActions: Array<ILogAction>;
   };
+  Map: undefined;
 };
 
 interface ILogAction {
@@ -19,30 +20,43 @@ interface ILogAction {
   timestamp: Date;
 }
 
+interface ILocation {
+  address: string;
+  coords: {
+    lat: number;
+    lng: number;
+  };
+}
+
 interface ITodo {
   id: string;
   title: string;
   description: string;
   executionAt: Date;
-  location: string;
+  location: ILocation;
   status: TTodoStatus;
   logActions: Array<ILogAction>;
+  file: IFile | null;
   createdAt: Date;
 }
-
-interface IAddFormData
-  extends Pick<ITodo, 'title' | 'description' | 'executionAt' | 'location'> {}
 
 interface IsortedParams {
   ascSortPubDate: boolean;
   ascSortStatus: boolean;
 }
 
+interface IFile {
+  name: string;
+  type: string;
+  uri: string;
+}
+
 export type {
   TTodoStatus,
   TRootStackParamList,
   ILogAction,
+  ILocation,
   ITodo,
-  IAddFormData,
-  IsortedParams
+  IsortedParams,
+  IFile
 };

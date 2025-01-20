@@ -13,7 +13,7 @@ import {
   TodosList,
   TodosInfoStatuses
 } from '../components';
-import { ITodo, IAddFormData, TTodoStatus, IsortedParams } from '../types';
+import { ITodo, TTodoStatus, IsortedParams } from '../types';
 import { sortDateTodos, sortStatusTodos } from '../helpers';
 import { useColorScheme } from '../hooks';
 import { ColorSchemes } from '../constants';
@@ -63,7 +63,12 @@ const Home = (): React.JSX.Element => {
   };
 
   const addTodo = useCallback(
-    async (todoFormValues: IAddFormData): Promise<void> => {
+    async (
+      todoFormValues: Pick<
+        ITodo,
+        'title' | 'description' | 'executionAt' | 'location' | 'file'
+      >
+    ): Promise<void> => {
       const createdTodo: ITodo = {
         id: uuid.v4(),
         ...todoFormValues,

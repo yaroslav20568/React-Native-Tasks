@@ -18,7 +18,7 @@ interface IProps<T extends FieldValues> {
   name: Path<T>;
   buttonStyle?: StyleProp<ViewStyle>;
   errorTextStyle?: StyleProp<TextStyle>;
-  iconColor?: ColorValue | undefined;
+  iconColor?: ColorValue;
   textStyle?: StyleProp<TextStyle>;
   currentDate: Date;
   setCurrentDate: (date: Date) => void;
@@ -60,7 +60,7 @@ const CustomDatePicker = <T extends FieldValues>({
         render={({ field: { onChange }, fieldState: { error } }) => (
           <>
             <DatePicker
-              modal
+              modal={true}
               locale='en'
               open={openDatePicker}
               date={currentDate}

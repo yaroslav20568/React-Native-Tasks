@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  ScrollView,
   TouchableOpacity,
   useWindowDimensions
 } from 'react-native';
+import { ScrollView } from 'react-native-virtualized-view';
 import { s } from 'react-native-wind';
 import Animated, {
   useSharedValue,
@@ -16,15 +16,38 @@ import { useForm } from 'react-hook-form';
 import moment from 'moment';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { OpenFormButton, CustomInputText } from '..';
-import { IAddFormData } from '../../types';
-import CustomDatePicker from '../UI/CustomDatePicker';
+import {
+  OpenFormButton,
+  CustomInputText,
+  CustomDatePicker,
+  CustomGooglePlacesAutocomplete,
+  CustomImagePicker
+} from '..';
+import { IFile, ILocation, ITodo } from '../../types';
 import { useColorScheme } from '../../hooks';
 import { themeColors } from '../../constants';
 
 interface IProps {
-  addTodo: (addFormData: IAddFormData) => void;
+  addTodo: (
+    addFormData: Pick<
+      ITodo,
+      'title' | 'description' | 'executionAt' | 'location' | 'file'
+    >
+  ) => void;
 }
+
+interface IAddFormData
+  extends Pick<ITodo, 'title' | 'description' | 'executionAt'> {
+  location: string;
+}
+
+const defaultLocation = {
+  address: '',
+  coords: {
+    lat: 0,
+    lng: 0
+  }
+};
 
 const schema = yup
   .object({
@@ -42,15 +65,15 @@ const schema = yup
           .add(30, 'minutes')
           .format('MMMM Do YYYY, HH:mm')}`
       ),
-    location: yup
-      .string()
-      .required('Required')
-      .min(4, 'Short, from 4 characters')
+    location: yup.string().required('Enter and select from the list')
   })
   .required();
 
 const TodoAddForm = ({ addTodo }: IProps): React.JSX.Element => {
   const [formIsOpen, setFormIsOpen] = useState<boolean>(false);
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
+  const [location, setLocation] = useState<ILocation>(defaultLocation);
+  const [file, setFile] = useState<IFile | null>(null);
   const { control, handleSubmit, reset } = useForm<IAddFormData>({
     defaultValues: {
       title: '',
@@ -60,7 +83,6 @@ const TodoAddForm = ({ addTodo }: IProps): React.JSX.Element => {
     },
     resolver: yupResolver(schema)
   });
-  const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const { colorScheme } = useColorScheme();
   const { height } = useWindowDimensions();
   const translateY = useSharedValue<number>(-height);
@@ -83,9 +105,16 @@ const TodoAddForm = ({ addTodo }: IProps): React.JSX.Element => {
   };
 
   const onAddTodo = (todoFormValues: IAddFormData) => {
-    addTodo(todoFormValues);
+    const transformFormValues: Pick<
+      ITodo,
+      'title' | 'description' | 'executionAt' | 'location' | 'file'
+    > = { ...todoFormValues, location, file };
+
+    addTodo(transformFormValues);
     reset();
     setCurrentDate(new Date());
+    setLocation(defaultLocation);
+    setFile(null);
     setTimeout(() => {
       setFormIsOpen(prevState => !prevState);
     }, 500);
@@ -99,7 +128,7 @@ const TodoAddForm = ({ addTodo }: IProps): React.JSX.Element => {
       ]}
     >
       <OpenFormButton toggleOpenForm={toggleOpenForm} formIsOpen={formIsOpen} />
-      <ScrollView>
+      <ScrollView keyboardShouldPersistTaps='handled'>
         <View style={s`pt-28 pb-6 px-4`}>
           <View style={s`mb-4`}>
             <CustomInputText
@@ -137,14 +166,32 @@ const TodoAddForm = ({ addTodo }: IProps): React.JSX.Element => {
             />
           </View>
           <View style={s`mb-4`}>
-            <CustomInputText
+            <CustomGooglePlacesAutocomplete
               control={control}
               name='location'
               placeholder='Location'
-              inputStyle={s`bg-violet400-${colorScheme} rounded-xl border-2 border-violet500-${colorScheme} text-white-${colorScheme} py-4 px-4`}
+              defaultLocation={defaultLocation}
+              location={location}
+              setLocation={setLocation}
+              inputStyle={s`h-full bg-violet400-${colorScheme} rounded-xl border-2 border-violet500-${colorScheme} text-white-${colorScheme} py-4 pl-11 pr-11`}
               errorTextStyle={s`text-red400-${colorScheme} mt-1 ml-5`}
+              iconColor={themeColors.white[colorScheme]}
               placeholderTextColor={themeColors.white[colorScheme]}
               selectionColor={themeColors.white[colorScheme]}
+              listItemStyle={s`bg-violet400-${colorScheme}`}
+              listItemTextStyle={s`text-white-${colorScheme}`}
+            />
+          </View>
+          <View style={s`mb-2`}>
+            <CustomImagePicker
+              file={file}
+              setFile={setFile}
+              buttonStyle={s`flex-row items-center bg-violet400-${colorScheme} rounded-xl border-2 border-violet500-${colorScheme} text-white-${colorScheme} py-4 px-4`}
+              iconColor={themeColors.white[colorScheme]}
+              buttonTextStyle={s`text-white-${colorScheme} ml-2`}
+              imageStyle={s`w-28 h-28`}
+              clearButtonStyle={s`self-start bg-violet500-${colorScheme} rounded-full p-2 ml-4`}
+              clearIconColor={themeColors.white[colorScheme]}
             />
           </View>
           <TouchableOpacity

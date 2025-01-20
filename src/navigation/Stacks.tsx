@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { Home, TodoLog } from '../screens';
+import { Home, TodoLog, Map } from '../screens';
 import { TRootStackParamList } from '../types';
 import { ScreenNames } from '../constants';
 
@@ -14,6 +14,7 @@ const Stacks = () => {
       >
         <Stack.Screen name={ScreenNames.Home} component={Home} />
         <Stack.Screen name={ScreenNames.TodoLog} component={TodoLog} />
+        <Stack.Screen name={ScreenNames.Map} component={Map} />
       </Stack.Navigator>
     </NavigationContainer>
   );

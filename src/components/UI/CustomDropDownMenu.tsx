@@ -14,8 +14,8 @@ interface IProps {
   defaultValue: string | null;
   items: Array<TTodoStatus>;
   onPress: (status: TTodoStatus) => void;
-  iconColor?: ColorValue | undefined;
-  backgroundColor?: ColorValue | undefined;
+  iconColor?: ColorValue;
+  backgroundColor?: ColorValue;
   activeTextStyle?: StyleProp<TextStyle>;
   textStyle?: StyleProp<TextStyle>;
 }
